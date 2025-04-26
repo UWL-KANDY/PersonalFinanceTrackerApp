@@ -1,0 +1,56 @@
+Title,URL,Assignees,Status
+1. Signup (Registration),https://github.com/glitchfy/ipfinder/issues/2,,Backlog
+1.a Design for Signup,https://github.com/glitchfy/ipfinder/issues/5,,Backlog
+1.b. API Development for Signup,https://github.com/glitchfy/ipfinder/issues/6,,Backlog
+1.c. Frontend Implementation for Signup,https://github.com/glitchfy/ipfinder/issues/7,,Backlog
+1.d. Testing for Signup,https://github.com/glitchfy/ipfinder/issues/8,,Backlog
+2.Login,https://github.com/glitchfy/ipfinder/issues/3,,Backlog
+2.a. Design for login,https://github.com/glitchfy/ipfinder/issues/9,,Backlog
+2.b. API Development for login,https://github.com/glitchfy/ipfinder/issues/10,,Backlog
+2.c. Frontend Implementation for login,https://github.com/glitchfy/ipfinder/issues/11,,Backlog
+2.d. Testing for login,https://github.com/glitchfy/ipfinder/issues/12,,Backlog
+3.Forgot Password,https://github.com/glitchfy/ipfinder/issues/4,,Backlog
+3.a. Design for forgot password,https://github.com/glitchfy/ipfinder/issues/13,,Backlog
+3.b. API Development for forgot password,https://github.com/glitchfy/ipfinder/issues/14,,Backlog
+3.c. Frontend Implementation for forgot password,https://github.com/glitchfy/ipfinder/issues/15,,Backlog
+3.d. Testing for forgot password,https://github.com/glitchfy/ipfinder/issues/16,,Backlog
+4.Add and Manage Pockets (Sub-Accounts) in Each Bank,https://github.com/glitchfy/ipfinder/issues/17,,Backlog
+4.a.Design for Add and Manage Pockets,https://github.com/glitchfy/ipfinder/issues/20,,Backlog
+4.b.1. Develop API endpoints for Creating a pocket,https://github.com/glitchfy/ipfinder/issues/21,,Backlog
+4.b.2.Develop API endpoints for Editing a pocket,https://github.com/glitchfy/ipfinder/issues/22,,Backlog
+4.b.3.Develop API endpoints for Deleting a pocket,https://github.com/glitchfy/ipfinder/issues/23,,Backlog
+4.c.Frontend for Add and Manage Pockets,https://github.com/glitchfy/ipfinder/issues/24,,Backlog
+4.d.Testing for Add and Manage Pockets,https://github.com/glitchfy/ipfinder/issues/25,,Backlog
+5.Track Savings in Each Pocket and Bank,https://github.com/glitchfy/ipfinder/issues/18,,Backlog
+5.a. Design for Track Savings in Each Pocket and Bank,https://github.com/glitchfy/ipfinder/issues/26,,Backlog
+5.b. Backend/API for Track Savings in Each Pocket and Bank,https://github.com/glitchfy/ipfinder/issues/27,,Backlog
+5.c. Frontend for Track Savings in Each Pocket and Bank,https://github.com/glitchfy/ipfinder/issues/28,,Backlog
+5.d. Testing for Track Savings in Each Pocket and Bank,https://github.com/glitchfy/ipfinder/issues/29,,Backlog
+6.Generate Monthly-wise Reports,https://github.com/glitchfy/ipfinder/issues/19,,Backlog
+6.a. Design for Generate Bank-wise Reports,https://github.com/glitchfy/ipfinder/issues/30,,Backlog
+6.b. Backend/API for Generate Bank-wise Reports,https://github.com/glitchfy/ipfinder/issues/31,,Backlog
+6.c. Frontend for Generate Bank-wise Reports,https://github.com/glitchfy/ipfinder/issues/32,,Backlog
+6.d. Testing for Generate Bank-wise Reports,https://github.com/glitchfy/ipfinder/issues/33,,Backlog
+6. Show Balances for Each Category,https://github.com/glitchfy/ipfinder/issues/34,,Backlog
+6.a.Frontend Development,https://github.com/glitchfy/ipfinder/issues/35,,Backlog
+6.b.Backend API,https://github.com/glitchfy/ipfinder/issues/36,,Backlog
+6.c.Testing,https://github.com/glitchfy/ipfinder/issues/37,,Backlog
+7. Set Spending Limits for Categories,https://github.com/glitchfy/ipfinder/issues/38,,Backlog
+7.a.Frontend Development,https://github.com/glitchfy/ipfinder/issues/39,,Backlog
+7.b.1.Create POST /spending-limits for adding limits.,https://github.com/glitchfy/ipfinder/issues/40,,Backlog
+7.b.2.Create GET /spending-limits to fetch existing limits.,https://github.com/glitchfy/ipfinder/issues/41,,Backlog
+7.b.3.Create PUT /spending-limits/:id to update limits.,https://github.com/glitchfy/ipfinder/issues/42,,Backlog
+7.4.4.Create DELETE /spending-limits/:id to remove limits.,https://github.com/glitchfy/ipfinder/issues/43,,Backlog
+7.c.Testing,https://github.com/glitchfy/ipfinder/issues/44,,Backlog
+8. Show Remaining and Overspent Amounts,https://github.com/glitchfy/ipfinder/issues/45,,Backlog
+8.a.Frontend Development,https://github.com/glitchfy/ipfinder/issues/46,,Backlog
+8.b.Backend API,https://github.com/glitchfy/ipfinder/issues/47,,Backlog
+8.c.Testing,https://github.com/glitchfy/ipfinder/issues/48,,Backlog
+9. Recommended Color Scheme for Budget Categories,https://github.com/glitchfy/ipfinder/issues/49,,Backlog
+9.a.Frontend Development,https://github.com/glitchfy/ipfinder/issues/50,,Backlog
+9.b.Backend API,https://github.com/glitchfy/ipfinder/issues/51,,Backlog
+9.c.Testing,https://github.com/glitchfy/ipfinder/issues/52,,Backlog
+9. Monthly Spending Report,https://github.com/glitchfy/ipfinder/issues/53,,Backlog
+9.a.Frontend Development,https://github.com/glitchfy/ipfinder/issues/54,,Backlog
+9.b.Backend API,https://github.com/glitchfy/ipfinder/issues/55,,Backlog
+9.c.Testing,https://github.com/glitchfy/ipfinder/issues/56,,Backlog
