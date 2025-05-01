@@ -20,7 +20,7 @@ const RegisterPage = () => {
       </div>
       <div className="w-full max-w-md px-4">
         <div className="bg-card p-4 md:p-8 rounded-lg shadow-md border border-border">
-          {/* <RegisterForm /> */}
+          <RegisterForm />
         </div>
       </div>
     </div>

@@ -1,3 +1,4 @@
+import { LoginForm } from "@/components/auth/LoginForm";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -19,7 +20,7 @@ const LoginPage = () => {
       </div>
       <div className="w-full max-w-md px-4">
         <div className="bg-card p-4 md:p-8 rounded-lg shadow-md border border-border">
-          {/* <LoginForm /> */}
+          <LoginForm />
         </div>
       </div>
     </div>
