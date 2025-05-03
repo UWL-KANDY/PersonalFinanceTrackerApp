@@ -15,6 +15,7 @@ Additional documentation is available in the `docs` folder:
 - [Version Control](docs/VersionControl.md)
 - [Local Setup](docs/LocalSetup.md)
 - [Git Workflow](docs/GitWorkflow.md)
+- [Mobile Development](docs/MobileDevelopment.md)
 
 ## Expanding the ESLint configuration
 
