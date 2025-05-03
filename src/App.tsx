@@ -18,6 +18,8 @@ import SettingsPage from "./pages/SettingsPage";
 import ReportsPage from "./pages/ReportsPage";
 import SavingsGoalsPage from "./pages/SavingsGoalsPage";
 import ApiDocumentation from "./pages/ApiDocumentation";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+import { PublicRoute } from "./components/auth/PublicRoute";
 
 const queryClient = new QueryClient();
 
@@ -31,14 +33,14 @@ const App = () => {
             <Sonner />
             <BrowserRouter>
               <Routes>
-                {/* Public Routes */}
-                <Route path="/" element={<Index />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
+                {/* Public Routes - Redirect to dashboard if authenticated */}
+                <Route path="/" element={<PublicRoute><Index /></PublicRoute>} />
+                <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+                <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
                 <Route path="/api-docs" element={<ApiDocumentation />} />
                 
                 {/* Protected Routes with DashboardLayout */}
-                <Route path="/" element={<DashboardLayout />}>
+                <Route path="/" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
                   <Route path="/dashboard" element={<DashboardPage />} />
                   <Route path="/transactions" element={<TransactionsPage />} />
                   <Route path="/budgets" element={<BudgetsPage />} />

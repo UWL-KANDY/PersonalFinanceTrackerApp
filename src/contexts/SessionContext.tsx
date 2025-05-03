@@ -32,15 +32,25 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
 
         if (event === 'SIGNED_IN') {
-          toast({
-            title: "Welcome back!",
-            description: "You have successfully signed in.",
-          });
+          // When user signs in, extend the session duration
+          if (session) {
+            try {
+              // Refresh the session to extend it
+              await supabase.auth.refreshSession(session);
+              
+              toast({
+                title: "Welcome back!",
+                description: "You have successfully signed in.",
+              });
+            } catch (error) {
+              console.error("Failed to refresh session:", error);
+            }
+          }
         }
       }
     );
