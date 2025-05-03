@@ -3,6 +3,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface TransactionChartProps {
   data: Array<{
@@ -14,6 +15,8 @@ interface TransactionChartProps {
 
 export function TransactionChart({ data }: TransactionChartProps) {
   const isMobile = useIsMobile();
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   return (
     <Card className="col-span-4">
@@ -61,6 +64,17 @@ export function TransactionChart({ data }: TransactionChartProps) {
               <Tooltip
                 formatter={(value) => [`$${value}`, undefined]}
                 labelFormatter={(label) => `Date: ${label}`}
+                contentStyle={{
+                  backgroundColor: isDark ? 'hsl(var(--card))' : '#fff',
+                  borderColor: 'hsl(var(--border))',
+                  color: isDark ? 'hsl(var(--foreground))' : '#333',
+                }}
+                itemStyle={{
+                  color: isDark ? 'hsl(var(--foreground))' : 'inherit',
+                }}
+                labelStyle={{
+                  color: isDark ? 'hsl(var(--foreground))' : 'inherit',
+                }}
               />
               <Area
                 type="monotone"
