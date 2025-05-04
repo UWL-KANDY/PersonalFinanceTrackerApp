@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -12,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/contexts/SessionContext";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { Database } from "@/integrations/supabase/types";
 
 interface AddBudgetDialogProps {
   onBudgetAdded?: () => void;
@@ -49,7 +49,7 @@ export function AddBudgetDialog({ onBudgetAdded }: AddBudgetDialogProps) {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const { toast } = useToast();
   const { user } = useSession();
-  
+
   const form = useForm<BudgetFormValues>({
     resolver: zodResolver(budgetFormSchema),
     defaultValues: {
@@ -71,18 +71,22 @@ export function AddBudgetDialog({ onBudgetAdded }: AddBudgetDialogProps) {
 
     setIsSubmitting(true);
     try {
-      const { error } = await supabase.from("budgets").insert({
-        user_id: user.id,
+      const budgetData = {
         category: data.category,
         amount: data.amount,
         period: data.period,
-      });
+        user_id: user.id,
+      };
+
+      const { error } = await supabase
+        .from("budgets")
+        .insert(budgetData as any);
 
       if (error) throw error;
 
       setOpen(false);
       form.reset();
-      
+
       if (onBudgetAdded) {
         onBudgetAdded();
       }
@@ -135,7 +139,7 @@ export function AddBudgetDialog({ onBudgetAdded }: AddBudgetDialogProps) {
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="amount"
@@ -143,9 +147,9 @@ export function AddBudgetDialog({ onBudgetAdded }: AddBudgetDialogProps) {
                 <FormItem>
                   <FormLabel>Amount</FormLabel>
                   <FormControl>
-                    <Input 
-                      type="number" 
-                      placeholder="0.00" 
+                    <Input
+                      type="number"
+                      placeholder="0.00"
                       step="0.01"
                       {...field}
                       onChange={e => field.onChange(parseFloat(e.target.value) || 0)}
@@ -155,7 +159,7 @@ export function AddBudgetDialog({ onBudgetAdded }: AddBudgetDialogProps) {
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="period"
@@ -180,7 +184,7 @@ export function AddBudgetDialog({ onBudgetAdded }: AddBudgetDialogProps) {
                 </FormItem>
               )}
             />
-            
+
             <div className="flex justify-end space-x-2">
               <Button variant="outline" onClick={() => setOpen(false)} type="button">
                 Cancel

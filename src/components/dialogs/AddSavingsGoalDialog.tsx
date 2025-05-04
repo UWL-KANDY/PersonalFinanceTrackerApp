@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -11,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/contexts/SessionContext";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { Database } from "@/integrations/supabase/types";
 
 interface AddSavingsGoalDialogProps {
   onSavingsGoalAdded?: () => void;
@@ -29,7 +29,7 @@ export function AddSavingsGoalDialog({ onSavingsGoalAdded }: AddSavingsGoalDialo
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const { toast } = useToast();
   const { user } = useSession();
-  
+
   const form = useForm<SavingsGoalFormValues>({
     resolver: zodResolver(savingsGoalFormSchema),
     defaultValues: {
@@ -51,23 +51,27 @@ export function AddSavingsGoalDialog({ onSavingsGoalAdded }: AddSavingsGoalDialo
 
     setIsSubmitting(true);
     try {
-      const { error } = await supabase.from("savings_goals").insert({
-        user_id: user.id,
+      const goalData = {
         name: data.name,
         target_amount: data.targetAmount,
         deadline: data.deadline || null,
-      });
+        user_id: user.id,
+      };
+
+      const { error } = await supabase
+        .from("savings_goals")
+        .insert(goalData as any);
 
       if (error) throw error;
-      
+
       setOpen(false);
       form.reset();
-      
+
       toast({
         title: "Success",
         description: "Savings goal added successfully",
       });
-      
+
       if (onSavingsGoalAdded) {
         onSavingsGoalAdded();
       }
@@ -109,7 +113,7 @@ export function AddSavingsGoalDialog({ onSavingsGoalAdded }: AddSavingsGoalDialo
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="targetAmount"
@@ -117,9 +121,9 @@ export function AddSavingsGoalDialog({ onSavingsGoalAdded }: AddSavingsGoalDialo
                 <FormItem>
                   <FormLabel>Target Amount</FormLabel>
                   <FormControl>
-                    <Input 
-                      type="number" 
-                      placeholder="0.00" 
+                    <Input
+                      type="number"
+                      placeholder="0.00"
                       step="0.01"
                       {...field}
                       onChange={e => field.onChange(parseFloat(e.target.value) || 0)}
@@ -129,7 +133,7 @@ export function AddSavingsGoalDialog({ onSavingsGoalAdded }: AddSavingsGoalDialo
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="deadline"
@@ -143,7 +147,7 @@ export function AddSavingsGoalDialog({ onSavingsGoalAdded }: AddSavingsGoalDialo
                 </FormItem>
               )}
             />
-            
+
             <div className="flex justify-end space-x-2">
               <Button variant="outline" onClick={() => setOpen(false)} type="button">
                 Cancel

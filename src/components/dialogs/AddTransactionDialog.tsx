@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -12,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/contexts/SessionContext";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { Database } from "@/integrations/supabase/types";
 
 interface AddTransactionDialogProps {
   onTransactionAdded?: () => void;
@@ -24,7 +24,6 @@ const transactionFormSchema = z.object({
   category: z.string().min(1, "Category is required"),
   customCategory: z.string().optional(),
   description: z.string().optional(),
-  storageLocation: z.string().min(1, "Storage location is required"),
 });
 
 type TransactionFormValues = z.infer<typeof transactionFormSchema>;
@@ -44,20 +43,12 @@ const categories = [
   "Other Income",
 ];
 
-const storageLocations = [
-  "Bank",
-  "Cash",
-  "Investment",
-  "Savings",
-  "Other"
-];
-
 export function AddTransactionDialog({ onTransactionAdded }: AddTransactionDialogProps) {
   const [open, setOpen] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const { toast } = useToast();
   const { user } = useSession();
-  
+
   const form = useForm<TransactionFormValues>({
     resolver: zodResolver(transactionFormSchema),
     defaultValues: {
@@ -67,7 +58,6 @@ export function AddTransactionDialog({ onTransactionAdded }: AddTransactionDialo
       category: "",
       customCategory: "",
       description: "",
-      storageLocation: "Bank",
     },
   });
 
@@ -83,7 +73,7 @@ export function AddTransactionDialog({ onTransactionAdded }: AddTransactionDialo
 
     setIsSubmitting(true);
     try {
-      // Use an object without the storage_location field if it's causing issues
+      // Prepare the transaction data based on the database schema
       const transactionData = {
         user_id: user.id,
         name: data.name,
@@ -94,27 +84,16 @@ export function AddTransactionDialog({ onTransactionAdded }: AddTransactionDialo
         date: new Date().toISOString(),
       };
 
-      // Add storage_location only if it's recognized in the schema
-      try {
-        const { error } = await supabase.from("transactions").insert({
-          ...transactionData,
-          storage_location: data.storageLocation.toLowerCase(),
-        });
+      // Insert the transaction
+      const { error } = await supabase
+        .from("transactions")
+        .insert(transactionData as any);
 
-        if (error) throw error;
-      } catch (storageLocationError: any) {
-        // If storage_location causes an error, try without it
-        console.error("Storage location error:", storageLocationError);
-        const { error } = await supabase.from("transactions").insert(transactionData);
-        if (error) throw error;
-        
-        // Log for debugging
-        console.log("Transaction added without storage_location field");
-      }
-      
+      if (error) throw error;
+
       setOpen(false);
       form.reset();
-      
+
       if (onTransactionAdded) {
         onTransactionAdded();
       }
@@ -161,7 +140,7 @@ export function AddTransactionDialog({ onTransactionAdded }: AddTransactionDialo
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="amount"
@@ -169,9 +148,9 @@ export function AddTransactionDialog({ onTransactionAdded }: AddTransactionDialo
                 <FormItem>
                   <FormLabel>Amount</FormLabel>
                   <FormControl>
-                    <Input 
-                      type="number" 
-                      placeholder="0.00" 
+                    <Input
+                      type="number"
+                      placeholder="0.00"
                       step="0.01"
                       {...field}
                       onChange={e => field.onChange(parseFloat(e.target.value) || 0)}
@@ -181,7 +160,7 @@ export function AddTransactionDialog({ onTransactionAdded }: AddTransactionDialo
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="type"
@@ -203,7 +182,7 @@ export function AddTransactionDialog({ onTransactionAdded }: AddTransactionDialo
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="category"
@@ -248,31 +227,6 @@ export function AddTransactionDialog({ onTransactionAdded }: AddTransactionDialo
 
             <FormField
               control={form.control}
-              name="storageLocation"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Storage Location</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select storage location" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {storageLocations.map((location) => (
-                        <SelectItem key={location} value={location.toLowerCase()}>
-                          {location}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
               name="description"
               render={({ field }) => (
                 <FormItem>
@@ -284,7 +238,7 @@ export function AddTransactionDialog({ onTransactionAdded }: AddTransactionDialo
                 </FormItem>
               )}
             />
-            
+
             <div className="flex justify-end space-x-2">
               <Button variant="outline" onClick={() => setOpen(false)} type="button">
                 Cancel
