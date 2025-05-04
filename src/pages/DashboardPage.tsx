@@ -1,14 +1,14 @@
-
 import React, { useState, useEffect } from "react";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { TransactionChart } from "@/components/dashboard/TransactionChart";
-import { RecentTransactions, Transaction } from "@/components/dashboard/RecentTransactions";
+import { RecentTransactions } from "@/components/dashboard/RecentTransactions";
+import { SavingsGoalSummary } from "@/components/dashboard/SavingsGoalSummary";
 import { Wallet, ArrowUpRight, ArrowDownRight, Banknote } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 
 const DashboardPage = () => {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [transactions, setTransactions] = useState([]);
   const [chartData, setChartData] = useState([]);
   const [financialSummary, setFinancialSummary] = useState({
     currentMonthIncome: 0,
@@ -44,7 +44,7 @@ const DashboardPage = () => {
         type: transaction.type as "income" | "expense",
         category: transaction.category as any // Cast to expected category type
       }));
-      
+
       setTransactions(formattedTransactions);
 
       // Calculate financial summary for the current month
@@ -65,11 +65,11 @@ const DashboardPage = () => {
       const currentMonthIncome = monthlyData
         .filter(transaction => transaction.type === 'income')
         .reduce((sum, transaction) => sum + Number(transaction.amount), 0);
-      
+
       const currentMonthExpenses = monthlyData
         .filter(transaction => transaction.type === 'expense')
         .reduce((sum, transaction) => sum + Number(transaction.amount), 0);
-      
+
       const balance = currentMonthIncome - currentMonthExpenses;
       const savingsRate = currentMonthIncome > 0 ? (balance / currentMonthIncome) * 100 : 0;
 
@@ -101,7 +101,7 @@ const DashboardPage = () => {
     try {
       const months = [];
       const now = new Date();
-      
+
       // Get data for the last 6 months
       for (let i = 5; i >= 0; i--) {
         const month = new Date(now.getFullYear(), now.getMonth() - i, 1);
@@ -122,7 +122,7 @@ const DashboardPage = () => {
         const income = data
           .filter(transaction => transaction.type === 'income')
           .reduce((sum, transaction) => sum + Number(transaction.amount), 0);
-        
+
         const expenses = data
           .filter(transaction => transaction.type === 'expense')
           .reduce((sum, transaction) => sum + Number(transaction.amount), 0);
@@ -133,7 +133,7 @@ const DashboardPage = () => {
           expenses
         });
       }
-      
+
       return months;
     } catch (error) {
       console.error("Error generating chart data:", error);
@@ -143,10 +143,10 @@ const DashboardPage = () => {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
   };
 
@@ -193,8 +193,13 @@ const DashboardPage = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <TransactionChart data={chartData} />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <TransactionChart data={chartData} />
+        </div>
+        <div>
+          <SavingsGoalSummary />
+        </div>
       </div>
 
       <div>

@@ -9,6 +9,11 @@ import { useToast } from "@/hooks/use-toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2, Upload } from "lucide-react";
 
+type ProfileData = {
+  full_name: string | null;
+  avatar_url: string | null;
+};
+
 export function ProfileSection() {
   const { user } = useSession();
   const { toast } = useToast();
@@ -19,38 +24,41 @@ export function ProfileSection() {
 
   useEffect(() => {
     if (user) {
-      // Fetch profile data when user is available
-      const fetchProfile = async () => {
-        try {
-          const { data, error } = await supabase
-            .from('profiles')
-            .select('full_name, avatar_url')
-            .eq('id', user.id)
-            .single();
-
-          if (error) throw error;
-          
-          if (data) {
-            setFullName(data.full_name || "");
-            setAvatarUrl(data.avatar_url || "");
-          }
-        } catch (error: any) {
-          console.error('Error fetching profile:', error.message);
-        }
-      };
-
       fetchProfile();
     }
   }, [user]);
 
+  const fetchProfile = async () => {
+    try {
+      if (!user?.id) return;
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('full_name, avatar_url')
+        .eq('id', user.id)
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        setFullName(data.full_name || "");
+        setAvatarUrl(data.avatar_url || "");
+      }
+    } catch (error: any) {
+      console.error('Error fetching profile:', error.message);
+    }
+  };
+
   const uploadAvatar = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!user?.id) return;
+
     try {
       setIsLoading(true);
       const file = event.target.files?.[0];
       if (!file) return;
 
       const fileExt = file.name.split('.').pop();
-      const filePath = `${user?.id}/${Math.random()}.${fileExt}`;
+      const filePath = `${user.id}/${Math.random()}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('avatars')
@@ -62,10 +70,14 @@ export function ProfileSection() {
         .from('avatars')
         .getPublicUrl(filePath);
 
+      const updateData: Record<string, string> = {
+        avatar_url: publicUrl
+      };
+
       const { error: updateError } = await supabase
         .from('profiles')
-        .update({ avatar_url: publicUrl })
-        .eq('id', user?.id);
+        .update(updateData)
+        .eq('id', user.id);
 
       if (updateError) throw updateError;
 
@@ -87,12 +99,18 @@ export function ProfileSection() {
   };
 
   const updateName = async () => {
+    if (!user?.id) return;
+
     try {
       setIsLoading(true);
+      const updateData: Record<string, string> = {
+        full_name: fullName
+      };
+
       const { error } = await supabase
         .from('profiles')
-        .update({ full_name: fullName })
-        .eq('id', user?.id);
+        .update(updateData)
+        .eq('id', user.id);
 
       if (error) throw error;
 

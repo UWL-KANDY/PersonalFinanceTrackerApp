@@ -7,13 +7,15 @@ import { useToast } from '@/components/ui/use-toast';
 interface SessionContextProps {
   session: Session | null;
   user: User | null;
+  loading: boolean;
   signOut: () => Promise<void>;
 }
 
 const SessionContext = createContext<SessionContextProps>({
   session: null,
   user: null,
-  signOut: async () => {},
+  loading: true,
+  signOut: async () => { },
 });
 
 export const useSession = () => useContext(SessionContext);
@@ -21,39 +23,41 @@ export const useSession = () => useContext(SessionContext);
 export function SessionProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
   useEffect(() => {
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-    });
-
-    // Listen for auth changes
+    // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
+      (event, currentSession) => {
+        setSession(currentSession);
+        setUser(currentSession?.user ?? null);
+        setLoading(false);
 
         if (event === 'SIGNED_IN') {
-          // When user signs in, extend the session duration
-          if (session) {
-            try {
-              // Refresh the session to extend it
-              await supabase.auth.refreshSession(session);
-              
-              toast({
-                title: "Welcome back!",
-                description: "You have successfully signed in.",
-              });
-            } catch (error) {
-              console.error("Failed to refresh session:", error);
-            }
-          }
+          // When user signs in, show welcome toast
+          toast({
+            title: "Welcome back!",
+            description: "You have successfully signed in.",
+          });
         }
       }
     );
+
+    // THEN check for existing session
+    const initializeAuth = async () => {
+      try {
+        const { data } = await supabase.auth.getSession();
+        setSession(data.session);
+        setUser(data.session?.user ?? null);
+      } catch (error) {
+        console.error("Error getting session:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initializeAuth();
 
     return () => {
       subscription.unsubscribe();
@@ -61,15 +65,29 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signOut = async () => {
-    await supabase.auth.signOut();
-    toast({
-      title: "Signed out",
-      description: "You have been successfully signed out.",
-    });
+    try {
+      setLoading(true);
+      await supabase.auth.signOut();
+      setSession(null);
+      setUser(null);
+      toast({
+        title: "Signed out",
+        description: "You have been successfully signed out.",
+      });
+    } catch (error) {
+      console.error("Error signing out:", error);
+      toast({
+        title: "Error",
+        description: "Failed to sign out. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <SessionContext.Provider value={{ session, user, signOut }}>
+    <SessionContext.Provider value={{ session, user, loading, signOut }}>
       {children}
     </SessionContext.Provider>
   );
