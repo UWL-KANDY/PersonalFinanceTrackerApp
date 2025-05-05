@@ -15,7 +15,7 @@ const SessionContext = createContext<SessionContextProps>({
   session: null,
   user: null,
   loading: true,
-  signOut: async () => { },
+  signOut: async () => {},
 });
 
 export const useSession = () => useContext(SessionContext);
@@ -27,27 +27,49 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   const { toast } = useToast();
 
   useEffect(() => {
+    console.log("SessionProvider: Initializing authentication");
+    
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, currentSession) => {
+        console.log("Auth state changed:", event, currentSession?.user?.id);
         setSession(currentSession);
         setUser(currentSession?.user ?? null);
-        setLoading(false);
-
+        
         if (event === 'SIGNED_IN') {
+          console.log("User signed in:", currentSession?.user?.id);
           // When user signs in, show welcome toast
           toast({
             title: "Welcome back!",
             description: "You have successfully signed in.",
           });
+        } else if (event === 'SIGNED_OUT') {
+          console.log("User signed out");
+        } else if (event === 'TOKEN_REFRESHED') {
+          console.log("Token was refreshed");
         }
+        
+        setLoading(false);
       }
     );
 
     // THEN check for existing session
     const initializeAuth = async () => {
       try {
-        const { data } = await supabase.auth.getSession();
+        console.log("Checking for existing session");
+        const { data, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error("Error getting session:", error);
+          throw error;
+        }
+        
+        if (data?.session) {
+          console.log("Existing session found:", data.session.user.id);
+        } else {
+          console.log("No existing session found");
+        }
+        
         setSession(data.session);
         setUser(data.session?.user ?? null);
       } catch (error) {
@@ -60,6 +82,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     initializeAuth();
 
     return () => {
+      console.log("Cleaning up auth subscription");
       subscription.unsubscribe();
     };
   }, []);
@@ -67,6 +90,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   const signOut = async () => {
     try {
       setLoading(true);
+      console.log("Signing out user");
       await supabase.auth.signOut();
       setSession(null);
       setUser(null);
