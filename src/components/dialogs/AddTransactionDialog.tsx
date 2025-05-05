@@ -48,7 +48,7 @@ export function AddTransactionDialog({ onTransactionAdded }: AddTransactionDialo
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const { toast } = useToast();
   const { user } = useSession();
-
+  
   const form = useForm<TransactionFormValues>({
     resolver: zodResolver(transactionFormSchema),
     defaultValues: {
@@ -88,12 +88,12 @@ export function AddTransactionDialog({ onTransactionAdded }: AddTransactionDialo
       const { error } = await supabase
         .from("transactions")
         .insert(transactionData as any);
-
+      
       if (error) throw error;
-
+      
       setOpen(false);
       form.reset();
-
+      
       if (onTransactionAdded) {
         onTransactionAdded();
       }
@@ -140,7 +140,7 @@ export function AddTransactionDialog({ onTransactionAdded }: AddTransactionDialo
                 </FormItem>
               )}
             />
-
+            
             <FormField
               control={form.control}
               name="amount"
@@ -148,9 +148,9 @@ export function AddTransactionDialog({ onTransactionAdded }: AddTransactionDialo
                 <FormItem>
                   <FormLabel>Amount</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="0.00"
+                    <Input 
+                      type="number" 
+                      placeholder="0.00" 
                       step="0.01"
                       {...field}
                       onChange={e => field.onChange(parseFloat(e.target.value) || 0)}
@@ -160,7 +160,7 @@ export function AddTransactionDialog({ onTransactionAdded }: AddTransactionDialo
                 </FormItem>
               )}
             />
-
+            
             <FormField
               control={form.control}
               name="type"
@@ -182,7 +182,7 @@ export function AddTransactionDialog({ onTransactionAdded }: AddTransactionDialo
                 </FormItem>
               )}
             />
-
+            
             <FormField
               control={form.control}
               name="category"
@@ -224,7 +224,7 @@ export function AddTransactionDialog({ onTransactionAdded }: AddTransactionDialo
                 )}
               />
             )}
-
+            
             <FormField
               control={form.control}
               name="description"
@@ -238,7 +238,7 @@ export function AddTransactionDialog({ onTransactionAdded }: AddTransactionDialo
                 </FormItem>
               )}
             />
-
+            
             <div className="flex justify-end space-x-2">
               <Button variant="outline" onClick={() => setOpen(false)} type="button">
                 Cancel

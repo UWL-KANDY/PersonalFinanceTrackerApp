@@ -44,7 +44,7 @@ const DashboardPage = () => {
         type: transaction.type as "income" | "expense",
         category: transaction.category as any // Cast to expected category type
       }));
-
+      
       setTransactions(formattedTransactions);
 
       // Calculate financial summary for the current month
@@ -65,11 +65,11 @@ const DashboardPage = () => {
       const currentMonthIncome = monthlyData
         .filter(transaction => transaction.type === 'income')
         .reduce((sum, transaction) => sum + Number(transaction.amount), 0);
-
+      
       const currentMonthExpenses = monthlyData
         .filter(transaction => transaction.type === 'expense')
         .reduce((sum, transaction) => sum + Number(transaction.amount), 0);
-
+      
       const balance = currentMonthIncome - currentMonthExpenses;
       const savingsRate = currentMonthIncome > 0 ? (balance / currentMonthIncome) * 100 : 0;
 
@@ -101,7 +101,7 @@ const DashboardPage = () => {
     try {
       const months = [];
       const now = new Date();
-
+      
       // Get data for the last 6 months
       for (let i = 5; i >= 0; i--) {
         const month = new Date(now.getFullYear(), now.getMonth() - i, 1);
@@ -122,7 +122,7 @@ const DashboardPage = () => {
         const income = data
           .filter(transaction => transaction.type === 'income')
           .reduce((sum, transaction) => sum + Number(transaction.amount), 0);
-
+        
         const expenses = data
           .filter(transaction => transaction.type === 'expense')
           .reduce((sum, transaction) => sum + Number(transaction.amount), 0);
@@ -133,7 +133,7 @@ const DashboardPage = () => {
           expenses
         });
       }
-
+      
       return months;
     } catch (error) {
       console.error("Error generating chart data:", error);
@@ -143,10 +143,10 @@ const DashboardPage = () => {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    return date.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
     });
   };
 

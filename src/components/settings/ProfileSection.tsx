@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useEffect } from "react";
 import { useSession } from "@/contexts/SessionContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -31,7 +30,7 @@ export function ProfileSection() {
   const fetchProfile = async () => {
     try {
       if (!user?.id) return;
-
+      
       const { data, error } = await supabase
         .from('profiles')
         .select('full_name, avatar_url')
@@ -39,7 +38,7 @@ export function ProfileSection() {
         .single();
 
       if (error) throw error;
-
+      
       if (data) {
         setFullName(data.full_name || "");
         setAvatarUrl(data.avatar_url || "");
@@ -51,7 +50,7 @@ export function ProfileSection() {
 
   const uploadAvatar = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!user?.id) return;
-
+    
     try {
       setIsLoading(true);
       const file = event.target.files?.[0];
@@ -100,13 +99,13 @@ export function ProfileSection() {
 
   const updateName = async () => {
     if (!user?.id) return;
-
+    
     try {
       setIsLoading(true);
       const updateData: Record<string, string> = {
         full_name: fullName
       };
-
+      
       const { error } = await supabase
         .from('profiles')
         .update(updateData)
@@ -133,7 +132,7 @@ export function ProfileSection() {
     <div className="space-y-6">
       <div className="flex items-center gap-4">
         <Avatar className="h-20 w-20">
-          <AvatarImage src={avatarUrl} alt="Profile" />
+          <AvatarImage src={avatarUrl} alt="Profile" style={{ objectFit: 'cover' }} />
           <AvatarFallback>{user?.email?.[0].toUpperCase()}</AvatarFallback>
         </Avatar>
         <Button

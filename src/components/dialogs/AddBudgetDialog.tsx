@@ -49,7 +49,7 @@ export function AddBudgetDialog({ onBudgetAdded }: AddBudgetDialogProps) {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const { toast } = useToast();
   const { user } = useSession();
-
+  
   const form = useForm<BudgetFormValues>({
     resolver: zodResolver(budgetFormSchema),
     defaultValues: {
@@ -86,7 +86,7 @@ export function AddBudgetDialog({ onBudgetAdded }: AddBudgetDialogProps) {
 
       setOpen(false);
       form.reset();
-
+      
       if (onBudgetAdded) {
         onBudgetAdded();
       }
@@ -139,7 +139,7 @@ export function AddBudgetDialog({ onBudgetAdded }: AddBudgetDialogProps) {
                 </FormItem>
               )}
             />
-
+            
             <FormField
               control={form.control}
               name="amount"
@@ -147,9 +147,9 @@ export function AddBudgetDialog({ onBudgetAdded }: AddBudgetDialogProps) {
                 <FormItem>
                   <FormLabel>Amount</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="0.00"
+                    <Input 
+                      type="number" 
+                      placeholder="0.00" 
                       step="0.01"
                       {...field}
                       onChange={e => field.onChange(parseFloat(e.target.value) || 0)}
@@ -159,7 +159,7 @@ export function AddBudgetDialog({ onBudgetAdded }: AddBudgetDialogProps) {
                 </FormItem>
               )}
             />
-
+            
             <FormField
               control={form.control}
               name="period"
@@ -184,7 +184,7 @@ export function AddBudgetDialog({ onBudgetAdded }: AddBudgetDialogProps) {
                 </FormItem>
               )}
             />
-
+            
             <div className="flex justify-end space-x-2">
               <Button variant="outline" onClick={() => setOpen(false)} type="button">
                 Cancel

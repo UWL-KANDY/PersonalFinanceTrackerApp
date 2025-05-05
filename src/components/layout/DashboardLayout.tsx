@@ -89,8 +89,12 @@ export function DashboardLayout() {
           <div className="flex flex-col h-full">
             <div className="flex items-center justify-between p-4 border-b">
               <Link to="/dashboard" className="flex items-center space-x-2">
-                <Wallet className="h-6 w-6 text-primary" />
-                <span className="font-bold text-lg">FinanceFlow</span>
+              <img
+          src="/public/logo.png"
+          alt="FinanceFlow Logo"
+          className="h-10 w-10"
+        />
+                <span className="font-bold text-lg">Finance Flow</span>
               </Link>
               {isMobile && (
                 <Button

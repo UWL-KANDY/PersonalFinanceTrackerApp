@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { session, loading } = useSession();
   const location = useLocation();
-
+  
   // Add explicit session check after loading is done
   useEffect(() => {
     if (!loading && !session) {
@@ -24,12 +24,18 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
       return () => clearTimeout(timer);
     }
   }, [loading]);
-
+  
   // Show loading indicator while checking auth status
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin h-8 w-8 border-4 border-primary rounded-full border-t-transparent"></div>
+        <div 
+          className="animate-spin h-8 w-8 border-4 border-primary rounded-full border-t-transparent" 
+          role="status"
+          aria-label="Loading"
+        >
+          <span className="sr-only">Loading</span>
+        </div>
       </div>
     );
   }

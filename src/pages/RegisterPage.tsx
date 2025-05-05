@@ -1,3 +1,5 @@
+
+import React from "react";
 import { RegisterForm } from "@/components/auth/RegisterForm";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { useIsMobile } from "@/hooks/use-mobile";

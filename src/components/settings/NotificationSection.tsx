@@ -11,23 +11,23 @@ export function NotificationSection() {
   const { toast } = useToast();
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(true);
-
+  
   useEffect(() => {
     fetchNotificationSettings();
   }, [user]);
-
+  
   const fetchNotificationSettings = async () => {
     try {
       if (!user?.id) return;
-
+      
       const { data, error } = await supabase
         .from('profiles')
         .select('email_notifications, push_notifications')
         .eq('id', user.id)
         .single();
-
+      
       if (error) throw error;
-
+      
       if (data) {
         setEmailNotifications(data.email_notifications ?? true);
         setPushNotifications(data.push_notifications ?? true);
@@ -40,14 +40,14 @@ export function NotificationSection() {
   const updateNotificationSettings = async (type: 'email' | 'push', value: boolean) => {
     try {
       if (!user?.id) return;
-
+      
       const updateData: Record<string, boolean> = {};
       if (type === 'email') {
         updateData.email_notifications = value;
       } else {
         updateData.push_notifications = value;
       }
-
+        
       const { error } = await supabase
         .from('profiles')
         .update(updateData)
